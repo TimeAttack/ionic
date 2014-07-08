@@ -20,4 +20,8 @@
     <feature name="StatusBar">
       <param name="ios-package" value="CDVStatusBar" onload="true" />
     </feature>
+
+    <plugins>
+        <plugin name="Device" value="org.apache.cordova.Device"/>
+    </plugins>
 </widget>
