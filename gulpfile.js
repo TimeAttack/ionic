@@ -2,164 +2,60 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var bower = require('bower');
 var concat = require('gulp-concat');
-var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
-var rename = require('gulp-rename');
-var sh = require('shelljs');
 
 var livereload = require('gulp-livereload');
 var changed = require('gulp-changed');
 var ripple = require('ripple-emulator');
 var open = require('open');
-var http = require('http');
-var path = require('path');
-var ecstatic = require('ecstatic');
-var notify = require('gulp-notify');
 var clean = require('gulp-clean');
-var runSequence = require('run-sequence');
+var uglify = require('gulp-uglify');
+var sass = require('gulp-sass');
+var usemin = require('gulp-usemin');
+var sourcemaps = require('gulp-sourcemaps');
+var less = require('gulp-less');
+var minifyHTML = require('gulp-minify-html');
+var imagemin = require('gulp-imagemin');
 
-var paths = {
-  "public": ['public/**'],
-  styles: ['app/scss/**/*.scss'],
-  scripts: {
-    vendor: ["public/components/ionic/js/ionic.bundle.js"],
-    app: ['app/js/**/*.js']
-  },
-  templates: ['app/**/*.html']
-};
-
-var destinations = {
-  "public": 'www',
-  styles: 'www/css',
-  scripts: 'www/js',
-  templates: 'www',
-  livereload: ['www/**']
-};
-
-var options = {
-  open: true,
-  httpPort: 4400,
-  riddlePort: 4400
-};
-
-gulp.task('clean', function() {
-  return gulp.src('www', {
-    read: false
-  })
-    .pipe(clean());
-});
-
-
-gulp.task('copy_public', function() {
-    return gulp.src(paths["public"])
-        .pipe(gulp.dest(destinations["public"]));
-});
-
-
-gulp.task('styles', function(done) {
-  gulp.src(paths.styles)
-    .pipe(sass())
-    .pipe(gulp.dest(destinations.styles))
-    .pipe(minifyCss({
-      keepSpecialComments: 0
+gulp.task('usemin', function() {
+  gulp.src('app/*.html')
+    .pipe(usemin({
+      css: [minifyCss(), 'concat'],
+      scss: [sass()],
+      less: [sourcemaps.init(), less(), sourcemaps.write()],
+      html: [minifyHTML({empty: true})],
+      js: [uglify()]
     }))
-    .pipe(rename({
-      extname: '.min.css'
-    }))
-    .pipe(gulp.dest(destinations.styles))
-    .on('end', done);
+    .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('scripts', function() {
-  gulp.src(paths.scripts.vendor)
-    .pipe(concat('vendor.js'))
-    .pipe(gulp.dest(destinations.scripts));
-
-  return gulp.src(paths.scripts.app)
-    .pipe(concat('app.js'))
-    .pipe(gulp.dest(destinations.scripts));
-});
-
-gulp.task('templates', function() {
-  return gulp.src(paths.templates)
-    .pipe(changed(destinations.templates, {
-      extension: '.html'
-    }))
-    .pipe(gulp.dest(destinations.templates));
+gulp.task('fonts', function() { return gulp.src('app/**/{*.eot, *.ttf, *.woff}', {base: "app"}).pipe(gulp.dest('dist')); });
+gulp.task('configs', function() { return gulp.src('app/*.xml', {base: "app"}).pipe(gulp.dest('dist')); });
+gulp.task('images', function() {
+  return gulp.src('app/**/{*.png, *.svg, *.img, .*.ico}', {base: "app"})
+    .pipe(imagemin({optimizationLevel: 5}))
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('watch', function() {
-  var livereloadServer = livereload();
-
-  gulp.watch(paths["public"], ['copy_public']);
-  gulp.watch(paths.scripts.vendor, ['scripts']);
-  gulp.watch(paths.scripts.app, ['scripts']);
-  gulp.watch(paths.styles, ['styles']);
-  gulp.watch(paths.templates, ['templates']);
-
-  return gulp.watch(destinations.livereload).on('change', function(file) {
-    return livereloadServer.changed(file.path);
-  });
+  gulp.watch('app/img/**/*', ['images']);
+  gulp.watch('app/img/components/**/*', ['images', 'fonts']);
 });
 
-gulp.task('emulator', function() {
-  var url = "http://localhost:" + options.ripplePort + "/?enableripple=cordova-3.0.0-HVGA";
+gulp.task('server', ['watch'], function() { 
+  ripple.emulate.start({ port: 4400 }); 
+  open('http://localhost:4400/app/?enableripple=cordova-3.0.0');
+}); 
 
-  ripple.emulate.start(options);
-
-  gutil.log(gutil.colors.blue("Ripple-Emulator listening on " + options.ripplePort));
-
-  if (options.open) {
-    open(url);
-    return gutil.log(gutil.colors.blue("Opening " + url + " in the browser..."));
-  }
+gulp.task('server-dist', function() { 
+  ripple.emulate.start({ port: 4500 }); 
+  open('http://localhost:4500/dist/?enableripple=cordova-3.0.0');
 });
 
-gulp.task('server', function() {
-  var url = "http://localhost:" + options.httpPort + "/";
-
-  http.createServer(ecstatic({
-    root: "www"
-  })).listen(options.httpPort);
-
-  gutil.log(gutil.colors.blue("HTTP server listening on " + options.httpPort));
-
-  if (options.open) {
-    open(url);
-    return gutil.log(gutil.colors.blue("Opening " + url + " in the browser..."));
-  }
+gulp.task('clean', function () {
+    return gulp.src('dist', {read: false}).pipe(clean());
 });
 
-gulp.task('build', function(cb) {
-  return runSequence(
-    'clean', ['copy_public', 'styles', 'scripts', 'templates'],
-    cb
-  );
-});
+gulp.task('build', ['images', 'fonts', 'configs', 'usemin']);
 
-gulp.task('default', function(cb) {
-  return runSequence(
-    'build', ['watch', 'server'],
-    cb
-  );
-});
-
-gulp.task('install', ['git-check'], function() {
-  return bower.commands.install()
-    .on('log', function(data) {
-      gutil.log('bower', gutil.colors.cyan(data.id), data.message);
-    });
-});
-
-gulp.task('git-check', function(done) {
-  if (!sh.which('git')) {
-    console.log(
-      '  ' + gutil.colors.red('Git is not installed.'),
-      '\n  Git, the version control system, is required to download Ionic.',
-      '\n  Download git here:', gutil.colors.cyan('http://git-scm.com/downloads') + '.',
-      '\n  Once git is installed, run \'' + gutil.colors.cyan('gulp install') + '\' again.'
-    );
-    process.exit(1);
-  }
-  done();
-});
+gulp.task('default', ['build', 'server-dist']);
