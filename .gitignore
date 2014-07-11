@@ -1,6 +1,5 @@
 .idea/
 node_modules
 app/components
-public/components
 www
 dist
