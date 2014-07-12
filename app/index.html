@@ -9,8 +9,10 @@
     <link href="components/ionic/css/ionic.min.css" rel="stylesheet">
   <!-- endbuild -->
 
+  <!-- google maps javascript -->
+  <script src="https://maps.googleapis.com/maps/api/js"></script>
   <!-- build:js js/vendor.js -->
-    <script src="components/ionic/js/ionic-angular.js"></script>
+    <script src="components/ionic/js/ionic.bundle.js"></script>
   <!-- endbuild -->
 
   <!-- build:less css/app.css -->
@@ -23,7 +25,10 @@
     <script src="js/services.js"></script>
   <!-- endbuild -->
   </head>
-  <body ng-app="starter" animation="slide-left-right-ios7">
+  <body ng-app="starter" ng-controller="PageController" animation="slide-left-right-ios7">
+
+    <div id="map"></div>
+
     <!-- 
       The nav bar that will be updated as we navigate between views.
     -->

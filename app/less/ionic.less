@@ -1,7 +1,18 @@
-@header-font: Georgia;
-h1, h2, h3, h4 {
-    font-family: @header-font;
+html, body {
+  height: 100%;
 }
-.large {
-    font-family:@header-font;
+
+#map {
+  height: 100%;
+  width: 100%;
+  margin-bottom: -100%;
+}
+
+.view.transparent {
+  background: none;
+  position: inherit;
+
+  & > .pane {
+    z-index: -1;
+  }
 }
