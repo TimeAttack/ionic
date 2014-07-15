@@ -17,30 +17,32 @@ var sourcemaps = require('gulp-sourcemaps');
 var less = require('gulp-less');
 var minifyHTML = require('gulp-minify-html');
 var imagemin = require('gulp-imagemin');
+var rework = require('gulp-rework');
+var assets = require('rework-assets');
+var reworkSuit = require('rework-suit');
 
 gulp.task('usemin', function() {
-  gulp.src('app/*.html')
-    .pipe(usemin({
-      css: [minifyCss(), 'concat'],
-      scss: [sass()],
+  var reworCssPipe = rework(
+      assets({ src: 'app/components', dest: 'dist/assets', prefix: '../assets/' }),
+      reworkSuit());
+  var useminPipe = function() {
+    return usemin({
+      css: [minifyCss(), reworCssPipe, 'concat'],
+      scss: [sass(), reworCssPipe],
       less: [sourcemaps.init(), less(), sourcemaps.write()],
-      html: [minifyHTML({empty: true})],
-      js: [uglify()]
-    }))
-    .pipe(gulp.dest('dist/'));
+      html: [minifyHTML({empty: true})],      
+      js: [uglify({mangle: false})]
+    });
+  };
+
+  gulp.src(['app/*.html']).pipe(useminPipe()).pipe(gulp.dest('dist/'));
+  gulp.src(['app/templates/*.html']).pipe(useminPipe()).pipe(gulp.dest('dist/templates'));    
 });
 
-gulp.task('fonts', function() { return gulp.src('app/**/{*.eot, *.ttf, *.woff}', {base: "app"}).pipe(gulp.dest('dist')); });
 gulp.task('configs', function() { return gulp.src('app/*.xml', {base: "app"}).pipe(gulp.dest('dist')); });
-gulp.task('images', function() {
-  return gulp.src('app/**/{*.png, *.svg, *.img, .*.ico}', {base: "app"})
-    .pipe(imagemin({optimizationLevel: 5}))
-    .pipe(gulp.dest('dist'));
-});
 
 gulp.task('watch', function() {
-  gulp.watch('app/img/**/*', ['images']);
-  gulp.watch('app/img/components/**/*', ['images', 'fonts']);
+  gulp.watch('app/**/*{.css, .less, .img, .eot, .svg, .html, .js}', ['usemin']);
 });
 
 gulp.task('server', ['watch'], function() { 
@@ -57,7 +59,7 @@ gulp.task('clean', function () {
     return gulp.src('dist', {read: false}).pipe(clean());
 });
 
-gulp.task('build', ['images', 'fonts', 'configs', 'usemin']);
+gulp.task('build', ['configs', 'usemin']);
 
 gulp.task('default', ['build', 'server-dist']);
 
