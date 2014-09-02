@@ -46,7 +46,7 @@ gulp.task('watch', function() {
 });
 
 gulp.task('server', ['watch'], function() { 
-  ripple.emulate.start({ port: 4400 }); 
+  ripple.emulate.start({ port: 4400 });
   open('http://localhost:4400/app/?enableripple=cordova-3.0.0');
 }); 
 
