@@ -58,6 +58,11 @@ gulp.task('clean', function (cb) {
 
 gulp.task('build', ['usemin']);
 
+gulp.task('test', ['build'], function(done) {
+  console.log('No tests yet');
+  done();
+});
+
 gulp.task('default', ['build', 'ripple']);
 
 gulp.task('install', ['git-check'], function() {
