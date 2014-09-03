@@ -9,7 +9,6 @@ To use this project as is, first clone the repo from GitHub, then run:
 $ cd time-attack-ionic
 $ npm install -g cordova ionic gulp ripple-emulator
 $ npm install
-$ gulp install
 ```
 
 ### Prepare JavaScript application

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "An Ionic project",
   "scripts": {
+    "postinstall": "gulp install",
     "test": "gulp test"
   },
   "dependencies": {},
