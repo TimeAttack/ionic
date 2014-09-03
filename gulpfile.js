@@ -3,13 +3,13 @@ var gutil = require('gulp-util');
 var bower = require('bower');
 var concat = require('gulp-concat');
 var sh = require('shelljs');
+var del = require('del');
 var minifyCss = require('gulp-minify-css');
 
 var livereload = require('gulp-livereload');
 var changed = require('gulp-changed');
 var ripple = require('ripple-emulator');
 var open = require('open');
-var clean = require('gulp-clean');
 var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var usemin = require('gulp-usemin');
@@ -21,47 +21,44 @@ var rework = require('gulp-rework');
 var assets = require('rework-assets');
 var reworkSuit = require('rework-suit');
 
+var paths = {
+  'dist': 'www'
+};
+
 gulp.task('usemin', function() {
-  var reworCssPipe = rework(
-      assets({ src: 'app/components', dest: 'dist/assets', prefix: '../assets/' }),
+  var reworkCssPipe = rework(
+      assets({ src: 'app/components', dest: paths.dist + '/assets', prefix: '../assets/' }),
       reworkSuit());
   var useminPipe = function() {
     return usemin({
-      css: [minifyCss(), reworCssPipe, 'concat'],
-      scss: [sass(), reworCssPipe],
+      css: [minifyCss(), reworkCssPipe, 'concat'],
+      scss: [sass(), reworkCssPipe],
       less: [sourcemaps.init(), less(), sourcemaps.write()],
       html: [minifyHTML({empty: true})],      
       js: [uglify({mangle: false})]
     });
   };
 
-  gulp.src(['app/*.html']).pipe(useminPipe()).pipe(gulp.dest('dist/'));
-  gulp.src(['app/templates/*.html']).pipe(useminPipe()).pipe(gulp.dest('dist/templates'));    
+  gulp.src(['app/*.html']).pipe(useminPipe()).pipe(gulp.dest(paths.dist));
+  gulp.src(['app/templates/*.html']).pipe(useminPipe()).pipe(gulp.dest(paths.dist + '/templates'));
 });
-
-gulp.task('configs', function() { return gulp.src('app/*.xml', {base: "app"}).pipe(gulp.dest('dist')); });
 
 gulp.task('watch', function() {
   gulp.watch('app/**/*{.css, .less, .img, .eot, .svg, .html, .js}', ['usemin']);
 });
 
-gulp.task('server', ['watch'], function() { 
+gulp.task('ripple', ['watch'], function() {
   ripple.emulate.start({ port: 4400 });
-  open('http://localhost:4400/app/?enableripple=cordova-3.0.0');
+  open('http://localhost:4400/?enableripple=cordova-3.0.0');
 }); 
 
-gulp.task('server-dist', function() { 
-  ripple.emulate.start({ port: 4500 }); 
-  open('http://localhost:4500/dist/?enableripple=cordova-3.0.0');
+gulp.task('clean', function (cb) {
+  del([paths.dist], cb);
 });
 
-gulp.task('clean', function () {
-    return gulp.src('dist', {read: false}).pipe(clean());
-});
+gulp.task('build', ['usemin']);
 
-gulp.task('build', ['configs', 'usemin']);
-
-gulp.task('default', ['build', 'server-dist']);
+gulp.task('default', ['build', 'ripple']);
 
 gulp.task('install', ['git-check'], function() {
     return bower.commands.install()

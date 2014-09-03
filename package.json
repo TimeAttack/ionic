@@ -5,16 +5,12 @@
   "scripts": {
     "test": "gulp test"
   },
-  "main": "gulpfile.js",
-  "cordovaPlugins": [
-    "org.apache.cordova.geolocation"
-  ],
   "dependencies": {},
   "devDependencies": {
-    "bower": "^1.3.3",
-    "gulp": "^3.5.6",
+    "bower": "^1.3.8",
+    "del": "^0.1.2",
+    "gulp": "^3.8.7",
     "gulp-changed": "~0.2.0",
-    "gulp-clean": "~0.2.4",
     "gulp-concat": "^2.2.0",
     "gulp-htmlparser": "0.0.2",
     "gulp-imagemin": "^0.6.1",
@@ -35,6 +31,7 @@
     "open": "0.0.4",
     "rework-assets": "^0.2.0",
     "rework-suit": "^4.0.0",
-    "ripple-emulator": "~0.9.20"
+    "ripple-emulator": "~0.9.23",
+    "shelljs": "^0.3.0"
   }
 }

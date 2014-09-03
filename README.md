@@ -6,10 +6,24 @@ TimeAttack Ionic app
 To use this project as is, first clone the repo from GitHub, then run:
 
 ```bash
-$ cd ionic-app-base
-$ sudo npm install -g cordova ionic gulp
+$ cd time-attack-ionic
+$ npm install -g cordova ionic gulp ripple-emulator
 $ npm install
 $ gulp install
+```
+
+### Prepare JavaScript application
+
+```bash
+gulp clean && glp build
+```
+Now you're ready to compile native build!
+
+### Install required plugins
+
+```bash
+ionic plugin add org.apache.cordova.geolocation
+ionic plugin add org.apache.cordova.inappbrowser
 ```
 
 ## Using Sass (optional)
@@ -44,5 +58,5 @@ ionic platform add android
 Then you can build native app for installed platforms:
 
 ```bash
-gulp clean build && ionic build android
+gulp build && ionic build android
 ```
