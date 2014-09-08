@@ -1,0 +1,40 @@
+
+@button-vk-color: #587ea3;
+
+@button-vk-height-base: 42px;
+@padding-base-horizontal: 16px;
+
+#login-dialog {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  display: none;
+
+  .button.vk {
+    background-color: @button-vk-color;
+    color: #fff;
+    border-color:rgba(0, 0, 0, .2);
+    padding-left: (@button-vk-height-base + @padding-base-horizontal);
+    text-align: left;
+
+    >:first-child {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: @button-vk-height-base;
+      line-height: (@button-vk-height-base + 2);
+      font-size: 1.6em;
+      text-align: center;
+      border-right: 1px solid rgba(0, 0, 0, .2);
+    }
+
+    &.active,
+    &.activated {
+      background-color: darken(@button-vk-color, 10%);
+    }
+  }
+}
