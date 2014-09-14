@@ -10,6 +10,7 @@
       // TODO: check if there is authentication token in storage. If not, show authentication modal dialog.
 
       var mapOptions = {
+        // TODO: restore previous position?
         center: new google.maps.LatLng(40.435833800555567, -78.44189453125),
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         zoom: 11,
@@ -19,6 +20,11 @@
         panControl: false
       };
       var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+      navigator.geolocation.getCurrentPosition(function(position) {
+        $log.info(position);
+        map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+      });
     })
 
     .controller('ZeroController', function ($scope, $log) {
