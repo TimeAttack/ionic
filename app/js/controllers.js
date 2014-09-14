@@ -7,6 +7,8 @@
     .controller('PageController', function ($scope, $log) {
       $log.info('PageController loaded');
 
+      // TODO: check if there is authentication token in storage. If not, show authentication modal dialog.
+
       var mapOptions = {
         center: new google.maps.LatLng(40.435833800555567, -78.44189453125),
         mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -31,8 +33,11 @@
       });
     })
 
-    .controller('FriendsCtrl', function ($scope, Friends) {
+    .controller('FriendsCtrl', function ($scope, $log, Friends) {
+      $log.info('Loading FriendsController');
       $scope.friends = Friends.all();
+      //openAuthentication($log);
+      $log.info('FriendsController loaded');
     })
 
     .controller('FriendDetailCtrl', function ($scope, $stateParams, Friends) {
@@ -41,4 +46,23 @@
 
     .controller('AccountCtrl', function ($scope) {
     });
+
+  var openAuthentication = function($log) {
+    var scope = 'notify,friends,wall,offline';
+    var authURL="https://oauth.vk.com/authorize?client_id=12345&scope="+scope+"&redirect_uri=https://oauth.vk.com/blank.html&display=touch&response_type=token";
+    $log.info('About to open VK auth page..');
+    var ref = window.open(authURL, '_blank', 'location=yes');
+    $log.info('Opened VK auth page');
+    ref.addEventListener('exit', function () {
+      $log.info('InAppBrowser cancelled by user');
+    });
+    ref.addEventListener('loadstart', function(event) {
+      $log.info('InAppBrowser loadstart: ' + event.url);
+      var tmp = event.url.split('#');
+      if (tmp[0]=='https://oauth.vk.com/blank.html' || tmp[0]=='http://oauth.vk.com/blank.html') {
+        window.alert(tmp[1]);
+        ref.close();
+      }
+    });
+  };
 })(window, window.angular);
