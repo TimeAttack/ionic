@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'timeattack.auth'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'timeattack.auth', 'ta.tracks'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -49,11 +49,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     })
 
     .state('tab.tracks', {
-      url: '/track',
+      url: '/tracks',
       views: {
         'tab-tracks': {
-          templateUrl: 'templates/tab-zero.html',
-          controller: 'ZeroController'
+          templateUrl: 'templates/tab-tracks.html',
+          controller: 'TracksController'
         }
       }
     })

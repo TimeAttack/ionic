@@ -1,0 +1,13 @@
+<ion-view title="Трассы">
+  <div id="tracks-search-map"></div>
+
+  <ion-content class="has-header">
+    <ion-list>
+      <ion-item ng-repeat="track in tracks" class="item-thumbnail-left" type="item-text-wrap" href="#/tab/track/{{track.id}}">
+        <!-- TODO: static map with encoded polylines, see https://developers.google.com/maps/documentation/staticmaps/index#EncodedPolylines -->
+        <img src="//maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=80x80&maptype=roadmap"/>
+        {{track.name}}
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

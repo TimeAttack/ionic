@@ -1,0 +1,12 @@
+@map-height: 40%;
+
+#tracks-search-map {
+  position: absolute;
+  width: 100%;
+  top: 44px; // Hardcoded height of ionic navbar.
+  bottom: 100% - @map-height;
+
+  &+.ionic-scroll {
+    top: @map-height;
+  }
+}
