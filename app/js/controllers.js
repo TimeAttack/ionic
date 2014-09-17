@@ -34,7 +34,7 @@
       };
       var geolocationOptions = {enableHighAccuracy: true};
       navigator.geolocation.getCurrentPosition(positionListener, positionErrorHandler, geolocationOptions);
-      navigator.geolocation.watchPosition(positionListener, positionErrorHandler, geolocationOptions);
+      //navigator.geolocation.watchPosition(positionListener, positionErrorHandler, geolocationOptions);
     })
 
     .controller('ZeroController', function ($scope, $log) {
