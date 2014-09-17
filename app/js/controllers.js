@@ -21,10 +21,20 @@
       };
       var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-      navigator.geolocation.getCurrentPosition(function(position) {
+      var positionListener = function (position) {
         $log.info(position);
+        // TODO: pan only if map hasn't been moved for some time
         map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-      });
+      };
+      var positionErrorHandler = function (error) {
+        // error.code can be one of:
+        // PositionError.PERMISSION_DENIED
+        // PositionError.POSITION_UNAVAILABLE
+        // PositionError.TIMEOUT
+      };
+      var geolocationOptions = {enableHighAccuracy: true};
+      navigator.geolocation.getCurrentPosition(positionListener, positionErrorHandler, geolocationOptions);
+      navigator.geolocation.watchPosition(positionListener, positionErrorHandler, geolocationOptions);
     })
 
     .controller('ZeroController', function ($scope, $log) {
