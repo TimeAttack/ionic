@@ -48,6 +48,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       }
     })
 
+    .state('tab.tracks', {
+      url: '/track',
+      views: {
+        'tab-tracks': {
+          templateUrl: 'templates/tab-zero.html',
+          controller: 'ZeroController'
+        }
+      }
+    })
+
     .state('tab.friends', {
       url: '/friends',
       views: {
