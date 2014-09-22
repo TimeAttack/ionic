@@ -58,6 +58,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       }
     })
 
+    .state('tab.track-details', {
+      url: '/track/:trackId',
+      views: {
+        'tab-tracks': {
+          templateUrl: 'templates/track-detail.html',
+          controller: 'TrackDetailCtrl'
+        }
+      }
+    })
+
     .state('tab.friends', {
       url: '/friends',
       views: {
