@@ -2,9 +2,9 @@
 
   'use strict';
 
-  angular.module('ta.tracks', [])
+  angular.module('ta.tracks', ['ngResource'])
 
-    .controller('TracksController', function($scope, $log, Tracks) {
+    .controller('TracksController', function ($scope, $log, Tracks) {
       $log.info('Loading TracksController');
 
       $scope.$on('$destroy', function () {
@@ -25,14 +25,17 @@
 
       var positionListener = function (position) {
         $log.info('[TracksController] Got current position');
-        $scope.$apply(function() {
+        $scope.$apply(function () {
           $log.info('[TracksController] Navigating map to current position');
           map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 
           var bbox = map.getBounds();
-          $log.info(bbox.getNorthEast(), bbox.getSouthWest());
-          // TODO: search by bounding box.
-          $scope.tracks = Tracks.search();
+          $scope.tracks = Tracks.search({
+            swLat: bbox.getSouthWest().lat(),
+            swLng: bbox.getSouthWest().lng(),
+            neLat: bbox.getNorthEast().lat(),
+            neLng: bbox.getNorthEast().lng()
+          });
         });
       };
       var positionErrorHandler = function (error) {
@@ -48,17 +51,26 @@
       $log.info('TracksController loaded');
     })
 
-    .factory('Tracks', function() {
-      return {
-        search: function() {
-          return [
-            {
-              id: 12,
-              name: 'Тестовая трасса'
-            }
-          ];
+    .controller('TrackDetailCtrl', function ($scope, $log, $stateParams, Tracks) {
+      $log.info('Initializing TrackDetailCtrl');
+
+      $scope.$on('$destroy', function () {
+        $log.info('Destroying TrackDetailCtrl');
+      });
+
+      $scope.tack = Tracks.get($stateParams.trackId);
+
+      $log.info('TrackDetailCtrl initialized');
+    })
+
+    .factory('Tracks', function ($resource) {
+      return $resource('http://api.tapcat.net/track/:id', {}, {
+        search: {
+          url: 'http://api.tapcat.net/search/track/:swLat;:swLng;:neLat;:neLng',
+          method: 'GET',
+          isArray: true
         }
-      };
+      });
     });
 
 })(window, window.angular);
