@@ -49,17 +49,6 @@
       });
     })
 
-    .controller('FriendsCtrl', function ($scope, $log, Friends) {
-      $log.info('Loading FriendsController');
-      $scope.friends = Friends.all();
-      //openAuthentication($log);
-      $log.info('FriendsController loaded');
-    })
-
-    .controller('FriendDetailCtrl', function ($scope, $stateParams, Friends) {
-      $scope.friend = Friends.get($stateParams.friendId);
-    })
-
     .controller('AccountCtrl', function ($scope) {
     });
 
