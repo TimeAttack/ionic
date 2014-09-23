@@ -44,7 +44,7 @@ gulp.task('usemin', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch('app/**/*{.css, .less, .img, .eot, .svg, .html, .js}', ['usemin']);
+  gulp.watch('app/**/*', ['usemin']);
 });
 
 gulp.task('ripple', ['watch'], function() {
