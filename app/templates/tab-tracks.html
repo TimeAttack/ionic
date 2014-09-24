@@ -3,6 +3,10 @@
 
   <ion-content class="has-header">
     <ion-list>
+      <a class="item item-icon-left" href="#/tab/create">
+          <i class="icon ion-map"></i>
+          Cоздать трассу
+      </a>
       <ion-item ng-repeat="track in tracks" class="item-thumbnail-left" type="item-text-wrap" href="#/tab/track/{{track.id}}">
         <!-- TODO: static map with encoded polylines, see https://developers.google.com/maps/documentation/staticmaps/index#EncodedPolylines -->
         <img src="https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=13&size=80x80&maptype=roadmap&key=AIzaSyAZuWH_XiboUZ8aYi3reRWWfbDsb4NOh8I"/>

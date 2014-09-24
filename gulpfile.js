@@ -20,6 +20,7 @@ var imagemin = require('gulp-imagemin');
 var rework = require('gulp-rework');
 var assets = require('rework-assets');
 var reworkSuit = require('rework-suit');
+var karma = require('karma').server;
 
 var paths = {
   'dist': 'www'
@@ -70,6 +71,19 @@ gulp.task('install', ['git-check'], function() {
         .on('log', function(data) {
             gutil.log('bower', gutil.colors.cyan(data.id), data.message);
         });
+});
+
+gulp.task('test', function (done) {
+  karma.start({
+    configFile: __dirname + '/test/cfg/karma.conf.js',
+    singleRun: true
+  }, done);
+});
+
+gulp.task('tdd', function (done) {
+  karma.start({
+    configFile: __dirname + '/test/cfg/karma.conf.js'
+  }, done);
 });
 
 gulp.task('git-check', function(done) {
