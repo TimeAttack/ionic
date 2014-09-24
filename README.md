@@ -1,6 +1,5 @@
-TimeAttack Ionic app
+TimeAttack Ionic app [![Build Status](https://travis-ci.org/TimeAttack/ionic.svg?branch=master)](https://travis-ci.org/TimeAttack/ionic)
 =====================
-
 ## Installation
 
 To use this project as is, first clone the repo from GitHub, then run:
