@@ -23,4 +23,34 @@ angular.module('starter.services', [])
       return friends[friendId];
     }
   }
-});
+})
+.factory('Geolocation', [ 'GeolocationConfig', function Geolocation(cfg) {
+	var callbacks = [],
+		watchId;
+	var fireAllCallbacks = function(position) {
+		for(var i=0; i<callbacks.length; ++i) {
+			callbacks[i](position);
+		}
+	};
+	return {
+		watch: function (callback) {
+			if(!watchId) {
+				watchId = navigator.geolocation.watchPosition(fireAllCallbacks, function(reason) {
+					console.warn('Position update failed', reason);
+				}, cfg);
+			}
+			callbacks.push(callback);
+		},
+		getCurrent: function (success, error) {
+			return navigator.geolocation.getCurrentPosition(success, error);
+		},
+		removeListener: function (listener) {
+			callbacks = _.without(callbacks, listener);
+			if(_.isEmpty(callbacks)) {
+				navigator.geolocation.clearWatch(watchId);
+				watchId = undefined;
+			}
+		}
+	};
+}]);
+

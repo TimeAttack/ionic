@@ -20,7 +20,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   });
 })
-
+.constant('GeolocationConfig', {
+	enableHighAccuracy: true,
+	maximumAge: 6000, // ms
+	timeout: 10000
+})
 .config(function($stateProvider, $urlRouterProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states

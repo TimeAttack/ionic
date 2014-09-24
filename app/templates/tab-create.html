@@ -1,10 +1,18 @@
 <ion-view title="Трассы">
     <ion-content class="has-header">
-        <ion-list>
-            <a class="item item-icon-left" href="#/tab/create">
-                <i class="icon ion-map"></i>
-                Поехали
-            </a>
-        </ion-list>
+        <timer autostart="false" class="create-track_timer" start-time="0">
+            {{minutes | numberFixedLen:2}}:{{seconds | numberFixedLen:2}}
+        </timer>
+        <div ng-show="!started  && checkpoints.length > 0">
+            <a class="button button-full button-balanced" ng-click="save()">Сохранить</a>
+            <a class="padding-top button button-full button-clear" ng-click="started = true; start()">Заново</a>
+        </div>
     </ion-content>
+    <ion-footer-bar ng-show="!started  && checkpoints.length == 0" ng-click="started = true; start()"
+                    class="bar bar-footer bar-positive">
+        <h1 class="title">Старт</h1>
+    </ion-footer-bar>
+    <ion-footer-bar ng-show="started" ng-click="started = false; stop()" class="bar bar-footer bar-assertive">
+        <h1 class="title">Стоп</h1>
+    </ion-footer-bar>
 </ion-view>

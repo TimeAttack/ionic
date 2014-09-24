@@ -46,7 +46,7 @@
         // PositionError.TIMEOUT
       };
       var geolocationOptions = {enableHighAccuracy: true};
-      navigator.geolocation.getCurrentPosition(positionListener, positionErrorHandler, geolocationOptions);
+   //   navigator.geolocation.getCurrentPosition(positionListener, positionErrorHandler, geolocationOptions);
 
       $log.info('TracksController loaded');
     })
